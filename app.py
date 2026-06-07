@@ -20,7 +20,7 @@ DB_PATH = "pension_education.db"
 
 
 # =========================================================
-# 디자인: 베이지/골드 톤
+# 디자인: 깔끔한 네이비·민트·화이트 톤
 # =========================================================
 st.markdown("""
 <style>
@@ -31,7 +31,7 @@ html, body, [class*="css"] {
 }
 
 .stApp {
-    background: linear-gradient(135deg, #F8F5ED 0%, #F4EFE3 50%, #FBFAF6 100%);
+    background: linear-gradient(135deg, #F6F8FB 0%, #EEF4F6 48%, #FAFBFC 100%);
 }
 
 .block-container {
@@ -41,13 +41,12 @@ html, body, [class*="css"] {
 }
 
 .hero {
-    background: linear-gradient(135deg, #D9BE7E 0%, #C8A96A 50%, #A67C3D 100%);
-    color: #2F2618;
+    background: linear-gradient(135deg, #1F3A5F 0%, #2B5C7B 58%, #4CA6A8 100%);
+    color: #FFFFFF;
     padding: 36px 40px;
-    border-radius: 30px;
-    box-shadow: 0 18px 42px rgba(132, 96, 38, 0.18);
+    border-radius: 28px;
+    box-shadow: 0 18px 42px rgba(31, 58, 95, 0.18);
     margin-bottom: 24px;
-    border: 1px solid rgba(218, 194, 137, 0.95);
 }
 
 .hero h1 {
@@ -59,65 +58,64 @@ html, body, [class*="css"] {
 
 .hero p {
     font-size: 16px;
-    line-height: 1.75;
+    line-height: 1.78;
     opacity: 0.95;
-    max-width: 1080px;
+    max-width: 1100px;
+}
+
+.hero .subtitle {
+    display: inline-block;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 7px 14px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .section {
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid #E7D9BC;
-    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #DDE8EC;
+    border-radius: 24px;
     padding: 25px 27px;
-    box-shadow: 0 10px 30px rgba(132, 96, 38, 0.07);
+    box-shadow: 0 10px 30px rgba(31, 58, 95, 0.07);
     margin: 22px 0;
 }
 
 .section-title {
     font-size: 23px;
     font-weight: 800;
-    color: #3F3320;
+    color: #1F2E46;
     margin-bottom: 8px;
     letter-spacing: -0.35px;
 }
 
 .section-sub {
-    color: #71624B;
+    color: #667085;
     font-size: 14.5px;
     line-height: 1.65;
     margin-bottom: 14px;
 }
 
 .question-box {
-    background: #F7EEDB;
-    border-left: 6px solid #C8A96A;
-    color: #3F3320;
+    background: #EEF7F7;
+    border-left: 6px solid #4CA6A8;
+    color: #243447;
     padding: 16px 18px;
     border-radius: 17px;
-    line-height: 1.72;
+    line-height: 1.75;
     margin: 14px 0 18px 0;
-    border-top: 1px solid #E7D9BC;
-    border-right: 1px solid #E7D9BC;
-    border-bottom: 1px solid #E7D9BC;
+    border-top: 1px solid #D2E7E8;
+    border-right: 1px solid #D2E7E8;
+    border-bottom: 1px solid #D2E7E8;
 }
 
 .result {
-    background: #F9F7F1;
-    border: 1px solid #DFD1B4;
-    border-left: 6px solid #A67C3D;
-    color: #3E3423;
-    padding: 16px 18px;
-    border-radius: 17px;
-    font-size: 14.5px;
-    line-height: 1.75;
-    margin-top: 12px;
-}
-
-.insight {
-    background: #FFF9EB;
-    border: 1px solid #E8D6AA;
-    border-left: 6px solid #B88A32;
-    color: #3E3423;
+    background: #F7FAFC;
+    border: 1px solid #D9E5EC;
+    border-left: 6px solid #2B5C7B;
+    color: #243447;
     padding: 16px 18px;
     border-radius: 17px;
     font-size: 14.5px;
@@ -125,44 +123,67 @@ html, body, [class*="css"] {
     margin-top: 12px;
 }
 
+.insight {
+    background: #FFFDF3;
+    border: 1px solid #F1E4B8;
+    border-left: 6px solid #E7B84B;
+    color: #3D3522;
+    padding: 16px 18px;
+    border-radius: 17px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    margin-top: 12px;
+}
+
+.note {
+    background: #F2F4F7;
+    border: 1px solid #E4E7EC;
+    color: #475467;
+    padding: 13px 15px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    margin-top: 10px;
+}
+
 .type-card {
     background: #FFFFFF;
     border-radius: 18px;
-    border: 1px solid #E7D9BC;
-    box-shadow: 0 8px 20px rgba(132, 96, 38, 0.06);
+    border: 1px solid #DDE8EC;
+    box-shadow: 0 8px 20px rgba(31, 58, 95, 0.06);
     padding: 16px 17px;
-    min-height: 136px;
+    min-height: 146px;
 }
 
 .type-card b {
     display: block;
-    color: #3F3320;
+    color: #1F2E46;
     font-size: 16px;
     margin-bottom: 8px;
 }
 
 .type-card span {
-    color: #71624B;
+    color: #667085;
     font-size: 13.5px;
     line-height: 1.62;
 }
 
 div[data-testid="stMetric"] {
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid #E7D9BC;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid #DDE8EC;
     border-radius: 20px;
     padding: 18px 18px;
-    box-shadow: 0 8px 22px rgba(132, 96, 38, 0.06);
+    box-shadow: 0 8px 22px rgba(31, 58, 95, 0.06);
 }
 
 div[data-testid="stMetricValue"] {
-    color: #3F3320;
+    color: #1F2E46;
     font-weight: 800;
     font-size: 25px;
 }
 
 div[data-testid="stMetricLabel"] {
-    color: #71624B;
+    color: #667085;
 }
 
 hr {
@@ -211,10 +232,10 @@ def chart_style(fig, height=450, legend=True):
         height=height,
         template="plotly_white",
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(255,255,255,0.72)",
+        plot_bgcolor="rgba(255,255,255,0.76)",
         margin=dict(l=20, r=25, t=58, b=25),
-        font=dict(family="Noto Sans KR, sans-serif", size=13, color="#3E3423"),
-        title=dict(font=dict(size=19, color="#3F3320")),
+        font=dict(family="Noto Sans KR, sans-serif", size=13, color="#243447"),
+        title=dict(font=dict(size=19, color="#1F2E46")),
         showlegend=legend,
         legend=dict(
             orientation="h",
@@ -222,12 +243,19 @@ def chart_style(fig, height=450, legend=True):
             y=1.02,
             xanchor="right",
             x=1,
-            bgcolor="rgba(255,255,255,0.75)",
+            bgcolor="rgba(255,255,255,0.78)",
         ),
     )
-    fig.update_xaxes(showgrid=True, gridcolor="rgba(166, 124, 61, 0.16)", zeroline=False)
-    fig.update_yaxes(showgrid=True, gridcolor="rgba(166, 124, 61, 0.16)", zeroline=False)
+    fig.update_xaxes(showgrid=True, gridcolor="rgba(43, 92, 123, 0.13)", zeroline=False)
+    fig.update_yaxes(showgrid=True, gridcolor="rgba(43, 92, 123, 0.13)", zeroline=False)
     return fig
+
+
+def fmt_num(x, suffix=""):
+    try:
+        return f"{float(x):,.0f}{suffix}"
+    except Exception:
+        return str(x)
 
 
 # =========================================================
@@ -253,42 +281,43 @@ df["교육효율성"] = (
     df["교육참여인원"] / df["교육횟수"]
 ).replace([float("inf"), -float("inf")], 0).fillna(0)
 
-df["수급 규모1천명당교육참여"] = (
+df["연금지표1천단위당교육참여"] = (
     df["교육참여인원"] / df["노령연금수급자수"] * 1000
 ).replace([float("inf"), -float("inf")], 0).fillna(0)
 
-df["수급 규모1만명당교육횟수"] = (
+df["연금지표1만단위당교육횟수"] = (
     df["교육횟수"] / df["노령연금수급자수"] * 10000
 ).replace([float("inf"), -float("inf")], 0).fillna(0)
 
 
-# 지역 유형화
-avg_participants = df["교육참여인원"].mean()
-avg_recipients = df["노령연금수급자수"].mean()
+# '기타'는 여러 지역을 묶은 보조 범주이므로 해석용 자동 추출에서는 제외
+df_interpret = df[df["지역본부_표시"] != "기타"].copy()
+if df_interpret.empty:
+    df_interpret = df.copy()
+
+
+# 지역 유형화: 그래프에서는 전체 표시, 해석은 기타 제외
+avg_participants = df_interpret["교육참여인원"].mean()
+avg_indicator = df_interpret["노령연금수급자수"].mean()
 
 def classify(row):
-    if row["교육참여인원"] >= avg_participants and row["노령연금수급자수"] >= avg_recipients:
+    if row["교육참여인원"] >= avg_participants and row["노령연금수급자수"] >= avg_indicator:
         return "행동연계형"
-    elif row["교육참여인원"] >= avg_participants and row["노령연금수급자수"] < avg_recipients:
+    elif row["교육참여인원"] >= avg_participants and row["노령연금수급자수"] < avg_indicator:
         return "참여우수형"
-    elif row["교육참여인원"] < avg_participants and row["노령연금수급자수"] >= avg_recipients:
+    elif row["교육참여인원"] < avg_participants and row["노령연금수급자수"] >= avg_indicator:
         return "전환필요형"
     else:
         return "기초관리형"
 
 df["지역유형"] = df.apply(classify, axis=1)
 
-# 분석 해석용 데이터
-# '기타'는 여러 지역이 묶인 보조 범주이므로, 1위·최상위·최하위 해석에서는 제외합니다.
-df_interpret = df[df["지역본부_표시"] != "기타"].copy()
-if df_interpret.empty:
-    df_interpret = df.copy()
 
 # 주요값 자동 추출: 기타 제외 기준
 top_edu_count = df_interpret.sort_values("교육횟수", ascending=False).iloc[0]
 low_edu_count = df_interpret.sort_values("교육횟수", ascending=True).iloc[0]
 top_participant = df_interpret.sort_values("교육참여인원", ascending=False).iloc[0]
-top_demand = df_interpret.sort_values("노령연금수급자수", ascending=False).iloc[0]
+top_indicator = df_interpret.sort_values("노령연금수급자수", ascending=False).iloc[0]
 top_efficiency = df_interpret.sort_values("교육효율성", ascending=False).iloc[0]
 
 
@@ -297,12 +326,13 @@ top_efficiency = df_interpret.sort_values("교육효율성", ascending=False).il
 # =========================================================
 st.markdown("""
 <div class="hero">
+    <div class="subtitle">지역별 노후준비교육 현황과 연금 관련 지표를 활용한 탐색적 분석</div>
     <h1>노후준비교육은 실제 행동으로 이어질까?</h1>
     <p>
-        <b>지역별 노후준비교육 현황과 연금 관련 지표를 활용한 탐색적 분석</b><br>
+        고령화가 심화되면서 노후준비교육의 중요성은 커지고 있습니다.
+        그러나 교육을 많이 제공한다고 해서 실제 노후준비 행동으로 이어지는지는 별도의 데이터 분석이 필요합니다.
         본 대시보드는 국민연금공단의 노후준비교육 데이터와 지역별 연금 관련 지표를 결합하여,
-        교육 공급이 실제 참여로 이어지는지, 그리고 교육 참여가 연금 관련 준비 수준과 어떤 관계를 보이는지 분석합니다.
-        단, 본 분석은 노후준비 행동 전체를 단정하는 것이 아니라, 연금 관련 지표를 노후준비 행동의 하나의 대리 지표로 활용한 탐색적 분석입니다.
+        교육 공급, 교육 참여, 연금 관련 준비 지표 사이의 관계를 탐색합니다.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -317,6 +347,14 @@ k2.metric("총 교육참여인원", f"{df['교육참여인원'].sum():,.0f}명")
 k3.metric("연금 관련 행동 지표 합계", f"{df['노령연금수급자수'].sum():,.0f}")
 k4.metric("교육 효율성 최상위", f"{top_efficiency['지역본부_표시']}")
 
+st.markdown("""
+<div class="note">
+<b>해석 유의</b> 연금 관련 행동 지표는 실제 인구 수나 노후준비 행동 전체를 의미하지 않습니다.
+본 분석에서는 지역별 비교를 위한 대리 지표로 사용하며, 저축·투자·보험·부동산 등 다양한 노후준비 행동을 모두 포함하지는 않습니다.
+또한 ‘기타’는 여러 지역이 묶인 보조 범주이므로, 결과 해석의 최상위·최하위 판단에서는 제외했습니다.
+</div>
+""", unsafe_allow_html=True)
+
 st.divider()
 
 
@@ -324,16 +362,17 @@ st.divider()
 # 01 문제제기 & 데이터
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">01. 문제제기와 데이터 설계</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">01. 문제정의와 데이터 설계</div>', unsafe_allow_html=True)
 
 st.markdown("""
 <div class="question-box">
-<b>노후준비교육은 실제 노후준비 행동과 연결되어 있을까?</b><br>
-고령화가 심화되면서 노후준비교육의 중요성은 커지고 있습니다.
-그러나 교육을 많이 제공한다고 해서 실제로 사람들이 노후준비 행동으로까지 나아가는지는 별도의 데이터 분석이 필요합니다.
-노후준비 행동은 저축, 투자, 보험, 부동산 등 다양한 요소를 포함하므로 하나의 지표로 완전히 설명하기 어렵습니다.
-따라서 본 분석에서는 <b>연금 관련 지표를 노후준비 행동의 하나의 대리 지표</b>로 활용하여,
-교육 공급·교육 참여·연금 관련 지표 사이의 관계를 탐색적으로 분석합니다.
+<b>왜 이 분석이 필요한가?</b><br>
+한국 사회는 빠른 고령화와 함께 노후 불안이 커지고 있습니다.
+국민연금공단은 이러한 문제에 대응하기 위해 노후준비교육을 운영하고 있지만,
+교육이 실제 노후준비 행동으로 이어지는지는 단순한 교육횟수나 참여인원만으로 판단하기 어렵습니다.
+특히 노후준비 행동은 저축, 투자, 보험, 부동산, 연금 등 다양한 요소를 포함하기 때문에 직접 측정하기 어렵습니다.
+따라서 본 분석에서는 연금 관련 지표를 노후준비 행동의 하나의 대리 지표로 활용하여,
+노후준비교육의 공급과 참여가 실제 준비 지표와 어떤 관계를 보이는지 탐색하고자 합니다.
 </div>
 """, unsafe_allow_html=True)
 
@@ -348,8 +387,8 @@ with c1:
 with c2:
     st.markdown("""
 <div class="type-card">
-<b>데이터 2: 노령연금 수급 규모 현황</b>
-<span>지역별 노령연금 수급 규모와 수급금액을 사용하여 연금 관련 지표 규모를 파악했습니다.</span>
+<b>데이터 2: 연금 관련 지표</b>
+<span>지역별 노령연금 수급 규모와 수급금액을 활용하여 노후준비 행동을 간접적으로 파악하는 대리 지표로 사용했습니다.</span>
 </div>
 """, unsafe_allow_html=True)
 with c3:
@@ -367,11 +406,11 @@ FROM education_pension;
 
 st.markdown("""
 <div class="insight">
-<b>분석 방향</b><br>
-본 분석은 <b>교육 공급(교육횟수)</b>, <b>교육 참여(교육참여인원)</b>, <b>연금 관련 행동 지표(노령연금 수급 규모)</b>를 단계적으로 비교합니다.
-이를 통해 “교육을 많이 제공하면 참여도 높아질까?”, “교육 참여가 높은 지역은 연금 관련 지표도 높게 나타날까?”라는 질문을 검증합니다.
-다만 본 분석은 교육이 직접적으로 연금 관련 행동을 유발했다고 주장하는 것이 아니라,
-지역 단위 데이터에서 나타나는 <b>관계와 패턴을 탐색</b>하는 데 목적이 있습니다.
+<b>분석 흐름</b><br>
+본 분석은 <b>교육 공급(교육횟수)</b> → <b>교육 참여(교육참여인원)</b> → <b>연금 관련 행동 지표</b>의 흐름으로 구성됩니다.
+이를 통해 “교육을 많이 제공하면 실제 참여도 높아질까?”, “교육 참여가 높은 지역은 연금 관련 지표도 높게 나타날까?”라는 질문을 검증합니다.
+다만 본 분석은 교육이 직접적으로 행동을 유발했다는 인과관계를 주장하는 것이 아니라,
+지역 단위 데이터에서 나타나는 관계와 패턴을 탐색하는 데 목적이 있습니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
@@ -406,7 +445,7 @@ fig1 = px.bar(
     orientation="h",
     text="교육횟수",
     color="교육횟수",
-    color_continuous_scale="YlOrBr",
+    color_continuous_scale="Teal",
     title="지역본부별 노후준비교육 교육횟수",
     labels={"교육횟수": "교육횟수", "지역본부_표시": "지역본부"},
 )
@@ -428,10 +467,10 @@ st.markdown(f"""
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-노후준비교육은 전국에 동일한 수준으로 공급되지 않았습니다. 특히 교육 공급이 많은 지역과 적은 지역 사이에는 뚜렷한 차이가 나타났습니다.
-다만 이를 특정 지역의 우수성이나 부족함으로 단정하기보다는, 교육 공급이 단순히 수요 규모에 따라 기계적으로 배분되는 것이 아니라
-지역본부별 운영 역량, 교육 인프라, 행정적 우선순위의 영향을 함께 받을 수 있다는 점에 주목해야 합니다.
-즉, 노후준비교육은 <b>수요 기반 배분</b>과 <b>운영 중심 공급</b>의 성격이 동시에 나타나는 서비스로 해석할 수 있습니다.
+노후준비교육은 모든 지역에서 동일한 수준으로 제공되지 않았습니다.
+이는 교육 서비스가 제도적으로 존재하는 것만으로는 충분하지 않으며, 지역별 교육 접근 기회 자체가 다르게 형성될 수 있음을 의미합니다.
+다만 이 차이를 특정 지역의 우수성이나 부족함으로 단정하기보다는, 교육 공급이 지역본부의 운영 역량, 교육 인프라, 행정적 우선순위의 영향을 받는 구조적 결과로 해석할 필요가 있습니다.
+따라서 다음 단계에서는 교육 공급량의 차이가 실제 교육 참여와 연금 관련 준비 지표의 차이로 이어지는지 확인해야 합니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
@@ -469,7 +508,7 @@ with left:
         x=df["지역본부_표시"],
         y=df["교육횟수"],
         name="교육횟수",
-        marker_color="#C8A96A",
+        marker_color="#4CA6A8",
     ))
     fig2.add_trace(go.Scatter(
         x=df["지역본부_표시"],
@@ -477,8 +516,8 @@ with left:
         name="교육참여인원",
         mode="lines+markers",
         yaxis="y2",
-        line=dict(color="#5A3E1B", width=3),
-        marker=dict(size=9, color="#5A3E1B"),
+        line=dict(color="#1F3A5F", width=3),
+        marker=dict(size=9, color="#1F3A5F"),
     ))
     fig2.update_layout(
         title="교육횟수와 교육참여인원 비교",
@@ -497,7 +536,7 @@ with right:
         orientation="h",
         text="교육효율성",
         color="교육효율성",
-        color_continuous_scale="YlOrBr",
+        color_continuous_scale="Teal",
         title="교육 1회당 평균 참여인원",
         labels={"교육효율성": "1회당 평균 참여인원", "지역본부_표시": "지역본부"},
     )
@@ -513,90 +552,90 @@ st.markdown(f"""
 <b>결과</b><br>
 ※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
 교육횟수가 가장 많은 지역과 교육참여인원이 가장 많은 지역은 일치하지 않았습니다.
-또한 교육 1회당 평균 참여인원을 기준으로 보면 <b>{top_efficiency['지역본부_표시']}</b>이 가장 높게 나타났습니다.
+교육 1회당 평균 참여인원을 기준으로 보면 <b>{top_efficiency['지역본부_표시']}</b>이 가장 높게 나타났습니다.
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-우리는 일반적으로 교육을 많이 열면 참여도 자연스럽게 증가할 것이라고 예상할 수 있습니다.
+일반적으로 교육을 많이 열면 참여도 자연스럽게 증가할 것이라고 예상할 수 있습니다.
 그러나 실제 데이터에서는 교육횟수와 참여인원이 완전히 비례하지 않았습니다.
 일부 지역은 상대적으로 적은 교육횟수에도 높은 참여를 기록했고, 반대로 많은 교육을 운영했음에도 1회당 참여 규모가 낮은 지역도 나타났습니다.
-이는 노후준비교육의 성과가 단순한 공급량보다 <b>교육 접근성, 홍보 방식, 지역 주민의 관심도, 프로그램 구성</b>과 같은 운영 요인에 의해 좌우될 수 있음을 보여줍니다.
-따라서 핵심 과제는 교육 횟수를 늘리는 것이 아니라, <b>교육 1회당 참여 효율성을 높이는 것</b>입니다.
+이는 노후준비교육의 1차 성과가 교육 공급량보다 <b>참여 전환 능력</b>에 의해 좌우될 수 있음을 보여줍니다.
+따라서 교육 정책을 평가할 때 단순히 “몇 회 운영했는가”가 아니라 “얼마나 많은 사람이 실제로 참여했는가”, “교육 1회당 참여 효율성이 어떠한가”를 함께 봐야 합니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================
-# 04 연금 관련 준비 지표 현황
+# 04 연금 관련 지표
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown('<div class="section-title">04. 연금 관련 준비 수준은 지역별로 차이가 있을까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 노령연금 수급 규모를 기준으로 볼 때, 어느 지역의 연금 관련 준비 지표가 가장 클까?
+<b>질문</b> 연금 관련 지표를 기준으로 볼 때, 노후준비 행동 수준은 지역별로 차이가 있을까?
 </div>
 """, unsafe_allow_html=True)
 
-sql_demand = """
+sql_indicator = """
 SELECT
     지역본부,
     노령연금수급자수
 FROM education_pension
 ORDER BY 노령연금수급자수 DESC;
 """
-df_demand = load_data(sql_demand)
-df_demand = make_numeric(df_demand, ["노령연금수급자수"])
-df_demand["지역본부_표시"] = df_demand["지역본부"].apply(short_region)
+df_indicator = load_data(sql_indicator)
+df_indicator = make_numeric(df_indicator, ["노령연금수급자수"])
+df_indicator["지역본부_표시"] = df_indicator["지역본부"].apply(short_region)
 
 fig4 = px.bar(
-    df_demand.sort_values("노령연금수급자수", ascending=False),
+    df_indicator.sort_values("노령연금수급자수", ascending=False),
     x="지역본부_표시",
     y="노령연금수급자수",
     text="노령연금수급자수",
     color="노령연금수급자수",
-    color_continuous_scale="YlOrBr",
+    color_continuous_scale="Teal",
     title="지역본부별 연금 관련 지표",
-    labels={"지역본부_표시": "지역본부", "노령연금수급자수": "노령연금수급자수"},
+    labels={"지역본부_표시": "지역본부", "노령연금수급자수": "연금 관련 지표"},
 )
-fig4.update_traces(texttemplate="%{text:,.0f}명", textposition="outside", cliponaxis=False)
+fig4.update_traces(texttemplate="%{text:,.0f}", textposition="outside", cliponaxis=False)
 fig4.update_layout(coloraxis_showscale=False)
 fig4 = chart_style(fig4, height=470, legend=False)
 st.plotly_chart(fig4, use_container_width=True)
-show_sql(sql_demand, "차트 SQL 보기")
+show_sql(sql_indicator, "차트 SQL 보기")
 
 st.markdown(f"""
 <div class="result">
 <b>결과</b><br>
 ※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
-노령연금 수급 규모가 가장 큰 지역은 <b>{top_demand['지역본부_표시']}</b>입니다.
-이는 연금 관련 준비 지표가 전국에 균등하게 분포하지 않고 특정 지역에 집중되어 있음을 보여줍니다.
+연금 관련 지표가 가장 크게 나타난 지역은 <b>{top_indicator['지역본부_표시']}</b>입니다.
+이는 연금 관련 준비 지표가 지역별로 균등하게 분포하지 않음을 보여줍니다.
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-노령연금 수급 규모는 지역별로 큰 차이를 보였고, 이는 연금 관련 준비 지표가 특정 지역에 집중되어 있음을 의미합니다.
-따라서 모든 지역에 동일한 규모의 교육을 제공하는 방식은 실제 수요를 충분히 반영하지 못할 가능성이 있습니다.
-노후준비교육은 전국 단일 기준으로 운영되기보다, 지역별 수급 규모와 잠재 수요를 함께 고려하여 교육 자원과 홍보 전략을 차등적으로 설계할 필요가 있습니다.
-즉, 교육 정책의 효율성을 높이기 위해서는 <b>공급량</b>뿐 아니라 <b>수요의 밀도와 규모</b>를 함께 반영해야 합니다.
+연금 관련 지표는 지역별로 큰 차이를 보였습니다.
+이는 노후준비와 관련된 행동 또는 결과가 모든 지역에서 동일하게 나타나지 않음을 의미합니다.
+다만 연금 관련 지표는 노후준비 행동 전체를 직접 측정하는 값이 아니라, 노후준비 수준을 간접적으로 파악하기 위한 대리 지표입니다.
+따라서 이 결과는 “어느 지역이 더 잘 준비했다”는 단정이 아니라, 교육 참여 수준과 비교해 볼 필요가 있는 <b>연금 관련 준비 지표의 지역 차이</b>로 해석하는 것이 적절합니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================
-# 05 공급과 수요 관계
+# 05 교육 참여와 연금 관련 지표의 관계
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown('<div class="section-title">05. 교육 참여는 연금 관련 행동 지표와 연결될까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 노령연금 수급 규모가 큰 지역일수록 노후준비교육 참여도 많을까?
+<b>질문</b> 노후준비교육 참여가 높은 지역은 연금 관련 지표도 높게 나타날까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -605,7 +644,7 @@ SELECT
     지역본부,
     교육참여인원,
     노령연금수급자수,
-    ROUND(교육참여인원 * 1000.0 / 노령연금수급자수, 2) AS 수급 규모1천명당교육참여
+    ROUND(교육참여인원 * 1000.0 / 노령연금수급자수, 2) AS 연금지표1천단위당교육참여
 FROM education_pension;
 """
 
@@ -613,17 +652,17 @@ fig5 = px.scatter(
     df,
     x="노령연금수급자수",
     y="교육참여인원",
-    size="수급 규모1천명당교육참여",
+    size="연금지표1천단위당교육참여",
     color="지역본부_표시",
     text="지역본부_표시",
     title="교육 참여 수준과 연금 관련 지표의 관계",
     labels={
-        "노령연금수급자수": "노령연금수급자수",
+        "노령연금수급자수": "연금 관련 지표",
         "교육참여인원": "교육참여인원",
-        "수급 규모1천명당교육참여": "수급 규모 1천 명당 교육참여",
+        "연금지표1천단위당교육참여": "연금 지표 1천 단위당 교육참여",
         "지역본부_표시": "지역본부",
     },
-    color_discrete_sequence=["#A67C3D", "#C8A96A", "#7A5424", "#D9BE7E", "#5A3E1B", "#B88A32", "#E7D39C", "#8C6A35"],
+    color_discrete_sequence=["#1F3A5F", "#2B5C7B", "#4CA6A8", "#7CC7C9", "#95A3B3", "#5E8BA6", "#B7DDE0", "#334E68"],
 )
 fig5.update_traces(textposition="top center", marker=dict(opacity=0.86, line=dict(width=1, color="white")))
 fig5 = chart_style(fig5, height=540, legend=False)
@@ -633,20 +672,20 @@ show_sql(sql_relation, "차트 SQL 보기")
 st.markdown("""
 <div class="result">
 <b>결과</b><br>
-노령연금 수급 규모가 큰 지역이 반드시 교육참여인원도 가장 높은 것은 아니었습니다.
-수급 규모가 큰 지역에서도 참여가 상대적으로 낮게 나타나는 경우가 있었고,
-반대로 수급 규모가 상대적으로 작아도 높은 참여 수준을 보이는 지역이 존재했습니다.
+교육참여인원이 높은 지역이 반드시 연금 관련 지표도 높게 나타나지는 않았습니다.
+반대로 연금 관련 지표가 큰 지역에서도 교육 참여 수준은 서로 다르게 나타났습니다.
+즉, 교육 참여와 연금 관련 지표 사이에 단순한 비례 관계는 뚜렷하게 확인되지 않았습니다.
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-일반적으로 노후준비가 필요한 사람이 많은 지역일수록 교육 참여도 높을 것이라고 예상할 수 있습니다.
-그러나 실제 데이터에서는 수급 규모와 교육 참여 수준 사이에 뚜렷한 비례 관계가 나타나지 않았습니다.
-이는 연금 관련 준비 지표가 존재하더라도 그 수요가 자동으로 교육 참여 행동으로 전환되지는 않는다는 점을 보여줍니다.
-따라서 노후준비교육의 문제는 단순한 <b>수요 부족</b>이 아니라, 잠재적 수요를 실제 참여로 연결하는 <b>참여 전환 과정</b>에 있을 수 있습니다.
-교육 대상자가 많은 지역일수록 교육 접근성, 정보 전달 방식, 참여 유인 설계가 더욱 중요합니다.
+본 분석의 핵심 질문은 “노후준비교육 참여가 실제 연금 관련 준비 지표와 연결되는가?”입니다.
+분석 결과, 교육 참여 수준과 연금 관련 지표 사이에는 단순한 비례 관계가 뚜렷하게 나타나지 않았습니다.
+이는 노후준비교육이 중요하지 않다는 의미가 아니라, 교육 참여만으로 실제 노후준비 행동을 충분히 설명하기 어렵다는 점을 보여줍니다.
+노후준비 행동은 교육 외에도 소득, 자산, 직업 안정성, 금융 접근성, 지역의 생활 여건 등 다양한 요인의 영향을 받을 가능성이 있습니다.
+따라서 교육 이후 실제 행동 변화를 유도하기 위해서는 교육 제공에서 끝나는 것이 아니라, 개인별 상황에 맞춘 후속 지원과 의사결정 도구가 함께 필요합니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
@@ -691,28 +730,28 @@ fig6 = px.scatter(
     x="노령연금수급자수",
     y="교육참여인원",
     color="지역유형",
-    size="수급 규모1천명당교육참여",
+    size="연금지표1천단위당교육참여",
     text="지역본부_표시",
     title="교육 참여 수준과 연금 관련 준비 지표에 따른 지역 유형화",
     labels={
-        "노령연금수급자수": "노령연금수급자수",
+        "노령연금수급자수": "연금 관련 지표",
         "교육참여인원": "교육참여인원",
         "지역유형": "지역 유형",
-        "수급 규모1천명당교육참여": "수급 규모 1천 명당 교육참여",
+        "연금지표1천단위당교육참여": "연금 지표 1천 단위당 교육참여",
     },
-    color_discrete_sequence=["#A67C3D", "#C8A96A", "#5A3E1B", "#D9BE7E"],
+    color_discrete_sequence=["#1F3A5F", "#4CA6A8", "#E7B84B", "#95A3B3"],
 )
-fig6.add_vline(x=avg_recipients, line_dash="dash", line_color="#8C6A35")
-fig6.add_hline(y=avg_participants, line_dash="dash", line_color="#8C6A35")
+fig6.add_vline(x=avg_indicator, line_dash="dash", line_color="#667085")
+fig6.add_hline(y=avg_participants, line_dash="dash", line_color="#667085")
 fig6.update_traces(textposition="top center", marker=dict(opacity=0.86, line=dict(width=1, color="white")))
 fig6 = chart_style(fig6, height=620, legend=True)
 st.plotly_chart(fig6, use_container_width=True)
 show_sql(sql_type, "지역 유형화 SQL 보기")
 
 tc1, tc2, tc3, tc4 = st.columns(4)
-tc1.markdown('<div class="type-card"><b>행동연계형</b><span>교육 참여와 연금 관련 지표가 모두 높은 지역입니다. 교육과 행동 지표가 함께 나타나는 우수 사례로 볼 수 있습니다.</span></div>', unsafe_allow_html=True)
+tc1.markdown('<div class="type-card"><b>행동연계형</b><span>교육 참여와 연금 관련 지표가 모두 높은 지역입니다. 교육과 준비 지표가 함께 나타나는 사례로 볼 수 있습니다.</span></div>', unsafe_allow_html=True)
 tc2.markdown('<div class="type-card"><b>참여우수형</b><span>교육 참여는 높지만 연금 관련 지표는 상대적으로 낮은 지역입니다. 교육 이후 행동 전환을 높이는 후속 지원이 필요합니다.</span></div>', unsafe_allow_html=True)
-tc3.markdown('<div class="type-card"><b>전환필요형</b><span>연금 관련 지표는 높지만 교육 참여가 낮은 지역입니다. 기존 준비 행동은 존재하나 교육 참여로 연결되지 않은 집단일 수 있습니다.</span></div>', unsafe_allow_html=True)
+tc3.markdown('<div class="type-card"><b>전환필요형</b><span>연금 관련 지표는 높지만 교육 참여가 낮은 지역입니다. 기존 준비 행동은 존재하나 교육 서비스와 연결되지 않은 집단일 수 있습니다.</span></div>', unsafe_allow_html=True)
 tc4.markdown('<div class="type-card"><b>기초관리형</b><span>교육 참여와 연금 관련 지표가 모두 낮은 지역입니다. 기초 홍보와 접근성 개선이 우선 필요한 지역입니다.</span></div>', unsafe_allow_html=True)
 
 st.markdown("""

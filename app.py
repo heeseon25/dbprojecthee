@@ -291,6 +291,33 @@ top_participant = df_interpret.sort_values("교육참여인원", ascending=False
 top_demand = df_interpret.sort_values("노령연금수급자수", ascending=False).iloc[0]
 top_efficiency = df_interpret.sort_values("교육효율성", ascending=False).iloc[0]
 
+# 결론용 지역 사례 자동 추출: 기타 제외 기준
+# 1) 교육 효율성이 가장 높은 지역: 우수 운영·벤치마킹 후보
+case_efficiency = df_interpret.sort_values("교육효율성", ascending=False).iloc[0]
+
+# 2) 교육횟수는 많지만 1회당 참여 효율성이 낮은 지역: 효율성 개선 후보
+case_low_eff_among_high_supply = (
+    df_interpret[df_interpret["교육횟수"] >= df_interpret["교육횟수"].mean()]
+    .sort_values("교육효율성", ascending=True)
+)
+if case_low_eff_among_high_supply.empty:
+    case_low_efficiency = df_interpret.sort_values("교육효율성", ascending=True).iloc[0]
+else:
+    case_low_efficiency = case_low_eff_among_high_supply.iloc[0]
+
+# 3) 연금 관련 지표가 가장 큰 지역: 행동연계/수요 집중 지역
+case_high_indicator = df_interpret.sort_values("노령연금수급자수", ascending=False).iloc[0]
+
+# 4) 연금 관련 지표는 큰 편이지만 교육참여가 평균보다 낮은 지역: 참여 전환 필요 후보
+case_conversion_candidates = df_interpret[
+    (df_interpret["노령연금수급자수"] >= df_interpret["노령연금수급자수"].mean()) &
+    (df_interpret["교육참여인원"] < df_interpret["교육참여인원"].mean())
+].copy()
+if case_conversion_candidates.empty:
+    case_conversion = df_interpret.sort_values("연금지표1천단위당교육참여", ascending=True).iloc[0]
+else:
+    case_conversion = case_conversion_candidates.sort_values("연금지표1천단위당교육참여", ascending=True).iloc[0]
+
 
 # =========================================================
 # Hero
@@ -755,17 +782,68 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+st.markdown('<div class="section-title" style="font-size:20px; margin-top:22px;">지역별 결론: 어느 지역에 어떤 전략이 필요할까?</div>', unsafe_allow_html=True)
+
+r1, r2 = st.columns(2)
+
+with r1:
+    st.markdown(f"""
+<div class="type-card">
+<b>{case_efficiency['지역본부_표시']} · 우수 운영 사례</b>
+<span>
+{case_efficiency['지역본부_표시']}는 교육 1회당 평균 참여인원이 <b>{case_efficiency['교육효율성']:.1f}명</b>으로 높게 나타났습니다.
+이는 단순히 교육을 많이 여는 것보다, 교육 운영 방식·홍보·접근성이 참여 성과에 더 큰 영향을 줄 수 있음을 보여줍니다.
+따라서 이 지역은 <b>교육 운영 방식의 벤치마킹 대상</b>으로 활용할 수 있습니다.
+</span>
+</div>
+""", unsafe_allow_html=True)
+
+with r2:
+    st.markdown(f"""
+<div class="type-card">
+<b>{case_low_efficiency['지역본부_표시']} · 교육 효율성 개선 필요</b>
+<span>
+{case_low_efficiency['지역본부_표시']}는 교육 공급이 많은 편이지만, 교육 1회당 평균 참여인원은 <b>{case_low_efficiency['교육효율성']:.1f}명</b> 수준으로 나타났습니다.
+이는 교육을 많이 제공해도 참여가 충분히 따라오지 않을 수 있음을 보여줍니다.
+따라서 추가적인 교육 확대보다 <b>교육 대상자 선정, 홍보 방식, 프로그램 구성 개선</b>을 통해 참여 효율성을 높이는 전략이 필요합니다.
+</span>
+</div>
+""", unsafe_allow_html=True)
+
+r3, r4 = st.columns(2)
+
+with r3:
+    st.markdown(f"""
+<div class="type-card">
+<b>{case_high_indicator['지역본부_표시']} · 연금 관련 지표 집중 지역</b>
+<span>
+{case_high_indicator['지역본부_표시']}는 연금 관련 지표가 가장 크게 나타난 지역입니다.
+이 지역은 노후준비와 관련된 잠재적 수요가 큰 지역으로 해석할 수 있으므로, 단순 교육 제공을 넘어 <b>상담·개인별 점검·후속 관리</b>까지 연결하는 전략이 필요합니다.
+특히 교육 참여가 실제 행동으로 이어지는지 지속적으로 추적할 필요가 있습니다.
+</span>
+</div>
+""", unsafe_allow_html=True)
+
+with r4:
+    st.markdown(f"""
+<div class="type-card">
+<b>{case_conversion['지역본부_표시']} · 참여 전환 전략 필요</b>
+<span>
+{case_conversion['지역본부_표시']}는 연금 관련 지표 대비 교육 참여 수준을 더 끌어올릴 필요가 있는 지역으로 볼 수 있습니다.
+이미 노후준비와 관련된 기반은 존재할 수 있지만, 교육 서비스와 충분히 연결되지 않았을 가능성이 있습니다.
+따라서 <b>온라인 교육 확대, 지역 맞춤형 홍보, 접근성 개선</b>을 통해 잠재 수요를 실제 교육 참여로 전환하는 전략이 필요합니다.
+</span>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("""
 <div class="insight">
-<b>지역 유형별 해결 방향 및 서비스 제안</b><br>
-<b>행동연계형</b> 지역은 교육 참여와 연금 관련 지표가 함께 높은 지역이므로, 현재 운영 방식을 유지하면서 우수 사례로 분석할 필요가 있습니다.
-<b>참여우수형</b> 지역은 교육 참여는 높지만 연금 관련 지표가 상대적으로 낮기 때문에, 교육 이후 실제 행동 전환을 돕는 상담·시뮬레이션·후속 알림 서비스가 필요합니다.
-<b>전환필요형</b> 지역은 연금 관련 지표는 높지만 교육 참여가 낮으므로, 이미 존재하는 노후준비 관심층을 교육 서비스로 연결하기 위한 홍보와 접근성 개선이 필요합니다.
-<b>기초관리형</b> 지역은 교육 참여와 연금 관련 지표가 모두 낮기 때문에, 기초적인 노후준비 인식 개선과 낮은 장벽의 교육 프로그램이 우선되어야 합니다.<br><br>
-또한 같은 지역 안에서도 개인의 소득, 자산, 저축액, 예상 연금 수준은 크게 다릅니다.
+<b>종합 서비스 제안</b><br>
+지역별 분석은 교육 자원을 어디에, 어떤 방식으로 배분할지에 대한 방향을 제시합니다.
+그러나 같은 지역 안에서도 개인의 소득, 자산, 저축액, 예상 연금 수준은 크게 다릅니다.
 따라서 집단 교육과 함께 <b>개인 맞춤형 노후 재무 시뮬레이션 서비스</b>를 제공한다면,
 사용자가 자신의 현재 소득·자산·월 저축액·예상 연금을 바탕으로 미래 자산 변화와 노후 준비 부족 구간을 직접 확인할 수 있습니다.
-즉, 지역 단위 분석은 교육 자원 배분의 방향을 제시하고, 개인 맞춤형 서비스는 교육 이후 실제 노후준비 행동으로 이어지도록 돕는 보완적 의사결정 지원 도구가 될 수 있습니다.
+즉, 지역 단위 분석은 교육 정책의 우선순위를 제시하고, 개인 맞춤형 서비스는 교육 이후 실제 노후준비 행동으로 이어지도록 돕는 보완적 의사결정 지원 도구가 될 수 있습니다.
 </div>
 """, unsafe_allow_html=True)
 

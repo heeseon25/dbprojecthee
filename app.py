@@ -253,11 +253,11 @@ df["교육효율성"] = (
     df["교육참여인원"] / df["교육횟수"]
 ).replace([float("inf"), -float("inf")], 0).fillna(0)
 
-df["수급자1천명당교육참여"] = (
+df["수급 규모1천명당교육참여"] = (
     df["교육참여인원"] / df["노령연금수급자수"] * 1000
 ).replace([float("inf"), -float("inf")], 0).fillna(0)
 
-df["수급자1만명당교육횟수"] = (
+df["수급 규모1만명당교육횟수"] = (
     df["교육횟수"] / df["노령연금수급자수"] * 10000
 ).replace([float("inf"), -float("inf")], 0).fillna(0)
 
@@ -278,13 +278,18 @@ def classify(row):
 
 df["지역유형"] = df.apply(classify, axis=1)
 
+# 분석 해석용 데이터
+# '기타'는 여러 지역이 묶인 보조 범주이므로, 1위·최상위·최하위 해석에서는 제외합니다.
+df_interpret = df[df["지역본부_표시"] != "기타"].copy()
+if df_interpret.empty:
+    df_interpret = df.copy()
 
-# 주요값 자동 추출
-top_edu_count = df.sort_values("교육횟수", ascending=False).iloc[0]
-low_edu_count = df.sort_values("교육횟수", ascending=True).iloc[0]
-top_participant = df.sort_values("교육참여인원", ascending=False).iloc[0]
-top_demand = df.sort_values("노령연금수급자수", ascending=False).iloc[0]
-top_efficiency = df.sort_values("교육효율성", ascending=False).iloc[0]
+# 주요값 자동 추출: 기타 제외 기준
+top_edu_count = df_interpret.sort_values("교육횟수", ascending=False).iloc[0]
+low_edu_count = df_interpret.sort_values("교육횟수", ascending=True).iloc[0]
+top_participant = df_interpret.sort_values("교육참여인원", ascending=False).iloc[0]
+top_demand = df_interpret.sort_values("노령연금수급자수", ascending=False).iloc[0]
+top_efficiency = df_interpret.sort_values("교육효율성", ascending=False).iloc[0]
 
 
 # =========================================================
@@ -294,7 +299,7 @@ st.markdown("""
 <div class="hero">
     <h1>노후준비교육의 공급과 수요는 일치하는가?</h1>
     <p>
-        국민연금공단의 <b>지역본부별 노후준비교육 현황</b>과 <b>지역별 노령연금 수급 현황</b>을 결합하여,
+        국민연금공단의 <b>지역본부별 노후준비교육 현황</b>과 <b>지역별 노령연금 수급 규모 현황</b>을 결합하여,
         교육 공급량과 실제 노후준비 수요가 어떻게 대응되는지 분석했습니다.
         본 대시보드는 단순 현황 파악을 넘어, 교육 횟수와 참여, 수급 규모 사이의 관계를 통해
         노후준비교육 운영 전략과 개인 맞춤형 노후 재무 시뮬레이션 서비스의 필요성을 도출합니다.
@@ -309,7 +314,7 @@ st.markdown("""
 k1, k2, k3, k4 = st.columns(4)
 k1.metric("총 교육횟수", f"{df['교육횟수'].sum():,.0f}회")
 k2.metric("총 교육참여인원", f"{df['교육참여인원'].sum():,.0f}명")
-k3.metric("총 노령연금 수급자", f"{df['노령연금수급자수'].sum():,.0f}명")
+k3.metric("노령연금 수급 규모 지표 합계", f"{df['노령연금수급자수'].sum():,.0f}")
 k4.metric("교육 효율성 최상위", f"{top_efficiency['지역본부_표시']}")
 
 st.divider()
@@ -341,8 +346,8 @@ with c1:
 with c2:
     st.markdown("""
 <div class="type-card">
-<b>데이터 2: 노령연금 수급 현황</b>
-<span>지역별 노령연금 수급자 수와 수급금액을 사용하여 노후준비 수요 규모를 파악했습니다.</span>
+<b>데이터 2: 노령연금 수급 규모 현황</b>
+<span>지역별 노령연금 수급 규모와 수급금액을 사용하여 노후준비 수요 규모를 파악했습니다.</span>
 </div>
 """, unsafe_allow_html=True)
 with c3:
@@ -362,7 +367,7 @@ st.markdown("""
 <div class="insight">
 <b>분석 방향</b><br>
 본 분석은 교육 공급을 의미하는 <b>교육횟수·교육참여인원</b>과
-노후준비 수요를 의미하는 <b>노령연금 수급자 수</b>를 비교합니다.
+노후준비 수요를 의미하는 <b>노령연금 수급 규모</b>를 비교합니다. 단, 본 데이터의 수급 규모는 지역별 수요를 비교하기 위한 지표로 사용하며, 전체 합계를 단순 인구 수로 해석하지 않습니다.
 이를 통해 “교육을 많이 제공하면 참여도 높을까?”, “수요가 높은 지역은 교육 참여도 높을까?”라는 가정을 검증합니다.
 또한 특정 지역명을 단정적으로 해석하기보다, <b>교육 공급-참여-수요의 관계</b> 자체에 초점을 맞추었습니다.
 </div>
@@ -412,6 +417,7 @@ show_sql(sql_edu_count, "차트 SQL 보기")
 st.markdown(f"""
 <div class="result">
 <b>결과</b><br>
+※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
 교육횟수가 가장 많은 지역은 <b>{top_edu_count['지역본부_표시']}</b>이며, 가장 적은 지역은 <b>{low_edu_count['지역본부_표시']}</b>입니다.
 지역별 교육 공급 규모에는 뚜렷한 편차가 존재합니다.
 </div>
@@ -503,6 +509,7 @@ show_sql(sql_efficiency, "차트 SQL 보기")
 st.markdown(f"""
 <div class="result">
 <b>결과</b><br>
+※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
 교육횟수가 가장 많은 지역과 교육참여인원이 가장 많은 지역은 일치하지 않았습니다.
 또한 교육 1회당 평균 참여인원을 기준으로 보면 <b>{top_efficiency['지역본부_표시']}</b>이 가장 높게 나타났습니다.
 </div>
@@ -528,7 +535,7 @@ st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown('<div class="section-title">04. 노후준비 수요가 높은 지역은 어디일까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 노령연금 수급자 규모를 기준으로 볼 때, 어느 지역의 노후준비 수요가 가장 클까?
+<b>질문</b> 노령연금 수급 규모를 기준으로 볼 때, 어느 지역의 노후준비 수요가 가장 클까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -550,8 +557,8 @@ fig4 = px.bar(
     text="노령연금수급자수",
     color="노령연금수급자수",
     color_continuous_scale="YlOrBr",
-    title="지역본부별 노령연금 수급자 수",
-    labels={"지역본부_표시": "지역본부", "노령연금수급자수": "노령연금 수급자 수"},
+    title="지역본부별 노령연금 수급 규모",
+    labels={"지역본부_표시": "지역본부", "노령연금수급자수": "노령연금수급자수"},
 )
 fig4.update_traces(texttemplate="%{text:,.0f}명", textposition="outside", cliponaxis=False)
 fig4.update_layout(coloraxis_showscale=False)
@@ -562,7 +569,8 @@ show_sql(sql_demand, "차트 SQL 보기")
 st.markdown(f"""
 <div class="result">
 <b>결과</b><br>
-노령연금 수급자 수가 가장 많은 지역은 <b>{top_demand['지역본부_표시']}</b>입니다.
+※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
+노령연금 수급 규모가 가장 큰 지역은 <b>{top_demand['지역본부_표시']}</b>입니다.
 이는 노후준비 수요가 전국에 균등하게 분포하지 않고 특정 지역에 집중되어 있음을 보여줍니다.
 </div>
 """, unsafe_allow_html=True)
@@ -570,7 +578,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-노령연금 수급자 규모는 지역별로 큰 차이를 보였고, 이는 노후준비 수요가 특정 지역에 집중되어 있음을 의미합니다.
+노령연금 수급 규모는 지역별로 큰 차이를 보였고, 이는 노후준비 수요가 특정 지역에 집중되어 있음을 의미합니다.
 따라서 모든 지역에 동일한 규모의 교육을 제공하는 방식은 실제 수요를 충분히 반영하지 못할 가능성이 있습니다.
 노후준비교육은 전국 단일 기준으로 운영되기보다, 지역별 수급 규모와 잠재 수요를 함께 고려하여 교육 자원과 홍보 전략을 차등적으로 설계할 필요가 있습니다.
 즉, 교육 정책의 효율성을 높이기 위해서는 <b>공급량</b>뿐 아니라 <b>수요의 밀도와 규모</b>를 함께 반영해야 합니다.
@@ -586,7 +594,7 @@ st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown('<div class="section-title">05. 노후준비 수요가 높은 지역은 교육 참여도 높을까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 노령연금 수급자 수가 많은 지역일수록 노후준비교육 참여도 많을까?
+<b>질문</b> 노령연금 수급 규모가 큰 지역일수록 노후준비교육 참여도 많을까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -595,7 +603,7 @@ SELECT
     지역본부,
     교육참여인원,
     노령연금수급자수,
-    ROUND(교육참여인원 * 1000.0 / 노령연금수급자수, 2) AS 수급자1천명당교육참여
+    ROUND(교육참여인원 * 1000.0 / 노령연금수급자수, 2) AS 수급 규모1천명당교육참여
 FROM education_pension;
 """
 
@@ -603,14 +611,14 @@ fig5 = px.scatter(
     df,
     x="노령연금수급자수",
     y="교육참여인원",
-    size="수급자1천명당교육참여",
+    size="수급 규모1천명당교육참여",
     color="지역본부_표시",
     text="지역본부_표시",
     title="노령연금 수급 규모와 교육 참여 수준의 관계",
     labels={
-        "노령연금수급자수": "노령연금 수급자 수",
+        "노령연금수급자수": "노령연금수급자수",
         "교육참여인원": "교육참여인원",
-        "수급자1천명당교육참여": "수급자 1천 명당 교육참여",
+        "수급 규모1천명당교육참여": "수급 규모 1천 명당 교육참여",
         "지역본부_표시": "지역본부",
     },
     color_discrete_sequence=["#A67C3D", "#C8A96A", "#7A5424", "#D9BE7E", "#5A3E1B", "#B88A32", "#E7D39C", "#8C6A35"],
@@ -623,7 +631,7 @@ show_sql(sql_relation, "차트 SQL 보기")
 st.markdown("""
 <div class="result">
 <b>결과</b><br>
-노령연금 수급자 수가 많은 지역이 반드시 교육참여인원도 가장 높은 것은 아니었습니다.
+노령연금 수급 규모가 큰 지역이 반드시 교육참여인원도 가장 높은 것은 아니었습니다.
 수급 규모가 큰 지역에서도 참여가 상대적으로 낮게 나타나는 경우가 있었고,
 반대로 수급 규모가 상대적으로 작아도 높은 참여 수준을 보이는 지역이 존재했습니다.
 </div>
@@ -681,14 +689,14 @@ fig6 = px.scatter(
     x="노령연금수급자수",
     y="교육참여인원",
     color="지역유형",
-    size="수급자1천명당교육참여",
+    size="수급 규모1천명당교육참여",
     text="지역본부_표시",
     title="교육 참여 수준과 노후준비 수요에 따른 지역 유형화",
     labels={
-        "노령연금수급자수": "노령연금 수급자 수",
+        "노령연금수급자수": "노령연금수급자수",
         "교육참여인원": "교육참여인원",
         "지역유형": "지역 유형",
-        "수급자1천명당교육참여": "수급자 1천 명당 교육참여",
+        "수급 규모1천명당교육참여": "수급 규모 1천 명당 교육참여",
     },
     color_discrete_sequence=["#A67C3D", "#C8A96A", "#5A3E1B", "#D9BE7E"],
 )

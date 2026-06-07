@@ -206,13 +206,34 @@ def short_region(name):
     return text
 
 
+def has_final_consonant(word: str) -> bool:
+    """한글 마지막 글자의 받침 여부를 확인합니다."""
+    if not word:
+        return False
+    last = str(word)[-1]
+    code = ord(last)
+    if 0xAC00 <= code <= 0xD7A3:
+        return (code - 0xAC00) % 28 != 0
+    return False
+
+
+def subject_josa(word: str) -> str:
+    """이/가"""
+    return "이" if has_final_consonant(word) else "가"
+
+
+def topic_josa(word: str) -> str:
+    """은/는"""
+    return "은" if has_final_consonant(word) else "는"
+
+
 def chart_style(fig, height=450, legend=True):
     fig.update_layout(
         height=height,
         template="plotly_white",
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(255,255,255,0.72)",
-        margin=dict(l=20, r=25, t=58, b=25),
+        margin=dict(l=35, r=70, t=58, b=35),
         font=dict(family="Noto Sans KR, sans-serif", size=13, color="#243447"),
         title=dict(font=dict(size=19, color="#1F2E46")),
         showlegend=legend,
@@ -524,13 +545,23 @@ with left:
         line=dict(color="#1F3A5F", width=3),
         marker=dict(size=9, color="#1F3A5F"),
     ))
+    max_participants = df["교육참여인원"].max()
     fig2.update_layout(
         title="교육횟수와 교육참여인원 비교",
         yaxis=dict(title="교육횟수"),
-        yaxis2=dict(title="교육참여인원", overlaying="y", side="right"),
+        yaxis2=dict(
+            title="교육참여인원",
+            overlaying="y",
+            side="right",
+            range=[0, max_participants * 1.18],
+            tickvals=[0, 5000, 10000, 15000, 20000],
+            ticktext=["0", "5천", "1만", "1.5만", "2만"],
+            showgrid=False,
+        ),
         legend=dict(orientation="h"),
     )
-    fig2 = chart_style(fig2, height=500)
+    fig2 = chart_style(fig2, height=540)
+    fig2.update_layout(margin=dict(l=45, r=85, t=58, b=45))
     st.plotly_chart(fig2, use_container_width=True)
 
 with right:
@@ -547,7 +578,7 @@ with right:
     )
     fig3.update_traces(texttemplate="%{text:.1f}명", textposition="outside", cliponaxis=False)
     fig3.update_layout(coloraxis_showscale=False)
-    fig3 = chart_style(fig3, height=500, legend=False)
+    fig3 = chart_style(fig3, height=540, legend=False)
     st.plotly_chart(fig3, use_container_width=True)
 
 show_sql(sql_efficiency, "차트 SQL 보기")
@@ -557,7 +588,7 @@ st.markdown(f"""
 <b>결과</b><br>
 ※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
 교육횟수가 가장 많은 지역과 교육참여인원이 가장 많은 지역은 일치하지 않았습니다.
-또한 교육 1회당 평균 참여인원을 기준으로 보면 <b>{top_efficiency['지역본부_표시']}</b>이 가장 높게 나타났습니다.
+또한 교육 1회당 평균 참여인원을 기준으로 보면 <b>{top_efficiency['지역본부_표시']}</b>{subject_josa(top_efficiency['지역본부_표시'])} 가장 높게 나타났습니다.
 </div>
 """, unsafe_allow_html=True)
 
@@ -639,7 +670,7 @@ st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown('<div class="section-title">05. 교육 참여는 연금 관련 행동 지표와 연결될까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 노령연금 수급 규모가 큰 지역일수록 노후준비교육 참여도 많을까?
+<b>질문</b> 연금 관련 지표가 큰 지역일수록 노후준비교육 참여도 높게 나타날까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -669,7 +700,10 @@ fig5 = px.scatter(
     color_discrete_sequence=["#1F3A5F", "#2B5C7B", "#4CA6A8", "#7CC7C9", "#95A3B3", "#5E8BA6", "#B7DDE0", "#334E68"],
 )
 fig5.update_traces(textposition="top center", marker=dict(opacity=0.86, line=dict(width=1, color="white")))
-fig5 = chart_style(fig5, height=540, legend=False)
+fig5 = chart_style(fig5, height=580, legend=False)
+fig5.update_xaxes(range=[0, df["노령연금수급자수"].max() * 1.12])
+fig5.update_yaxes(range=[0, df["교육참여인원"].max() * 1.18])
+fig5.update_layout(margin=dict(l=45, r=95, t=58, b=45))
 st.plotly_chart(fig5, use_container_width=True)
 show_sql(sql_relation, "차트 SQL 보기")
 
@@ -748,7 +782,10 @@ fig6 = px.scatter(
 fig6.add_vline(x=avg_recipients, line_dash="dash", line_color="#667085")
 fig6.add_hline(y=avg_participants, line_dash="dash", line_color="#667085")
 fig6.update_traces(textposition="top center", marker=dict(opacity=0.86, line=dict(width=1, color="white")))
-fig6 = chart_style(fig6, height=620, legend=True)
+fig6 = chart_style(fig6, height=640, legend=True)
+fig6.update_xaxes(range=[0, df["노령연금수급자수"].max() * 1.12])
+fig6.update_yaxes(range=[0, df["교육참여인원"].max() * 1.18])
+fig6.update_layout(margin=dict(l=45, r=95, t=58, b=45))
 st.plotly_chart(fig6, use_container_width=True)
 show_sql(sql_type, "지역 유형화 SQL 보기")
 
@@ -798,7 +835,7 @@ with r1:
 <div class="type-card">
 <b>{case_efficiency['지역본부_표시']} · 우수 운영 사례</b>
 <span>
-{case_efficiency['지역본부_표시']}는 교육 1회당 평균 참여인원이 <b>{case_efficiency['교육효율성']:.1f}명</b>으로 높게 나타났습니다.
+{case_efficiency['지역본부_표시']}{topic_josa(case_efficiency['지역본부_표시'])} 교육 1회당 평균 참여인원이 <b>{case_efficiency['교육효율성']:.1f}명</b>으로 높게 나타났습니다.
 이는 단순히 교육을 많이 여는 것보다, 교육 운영 방식·홍보·접근성이 참여 성과에 더 큰 영향을 줄 수 있음을 보여줍니다.
 따라서 이 지역은 <b>교육 운영 방식의 벤치마킹 대상</b>으로 활용할 수 있습니다.
 </span>
@@ -810,7 +847,7 @@ with r2:
 <div class="type-card">
 <b>{case_low_efficiency['지역본부_표시']} · 교육 효율성 개선 필요</b>
 <span>
-{case_low_efficiency['지역본부_표시']}는 교육 공급이 많은 편이지만, 교육 1회당 평균 참여인원은 <b>{case_low_efficiency['교육효율성']:.1f}명</b> 수준으로 나타났습니다.
+{case_low_efficiency['지역본부_표시']}{topic_josa(case_low_efficiency['지역본부_표시'])} 교육 공급이 많은 편이지만, 교육 1회당 평균 참여인원은 <b>{case_low_efficiency['교육효율성']:.1f}명</b> 수준으로 나타났습니다.
 이는 교육을 많이 제공해도 참여가 충분히 따라오지 않을 수 있음을 보여줍니다.
 따라서 추가적인 교육 확대보다 <b>교육 대상자 선정, 홍보 방식, 프로그램 구성 개선</b>을 통해 참여 효율성을 높이는 전략이 필요합니다.
 </span>
@@ -824,7 +861,7 @@ with r3:
 <div class="type-card">
 <b>{case_high_indicator['지역본부_표시']} · 연금 관련 지표 집중 지역</b>
 <span>
-{case_high_indicator['지역본부_표시']}는 연금 관련 지표가 가장 크게 나타난 지역입니다.
+{case_high_indicator['지역본부_표시']}{topic_josa(case_high_indicator['지역본부_표시'])} 연금 관련 지표가 가장 크게 나타난 지역입니다.
 이 지역은 노후준비와 관련된 잠재적 수요가 큰 지역으로 해석할 수 있으므로, 단순 교육 제공을 넘어 <b>상담·개인별 점검·후속 관리</b>까지 연결하는 전략이 필요합니다.
 특히 교육 참여가 실제 행동으로 이어지는지 지속적으로 추적할 필요가 있습니다.
 </span>
@@ -836,7 +873,7 @@ with r4:
 <div class="type-card">
 <b>{case_conversion['지역본부_표시']} · 참여 전환 전략 필요</b>
 <span>
-{case_conversion['지역본부_표시']}는 연금 관련 지표 대비 교육 참여 수준을 더 끌어올릴 필요가 있는 지역으로 볼 수 있습니다.
+{case_conversion['지역본부_표시']}{topic_josa(case_conversion['지역본부_표시'])} 연금 관련 지표 대비 교육 참여 수준을 더 끌어올릴 필요가 있는 지역으로 볼 수 있습니다.
 이미 노후준비와 관련된 기반은 존재할 수 있지만, 교육 서비스와 충분히 연결되지 않았을 가능성이 있습니다.
 따라서 <b>온라인 교육 확대, 지역 맞춤형 홍보, 접근성 개선</b>을 통해 잠재 수요를 실제 교육 참여로 전환하는 전략이 필요합니다.
 </span>

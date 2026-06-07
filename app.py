@@ -11,7 +11,7 @@ import streamlit as st
 # 기본 설정
 # =========================================================
 st.set_page_config(
-    page_title="노후준비교육의 공급과 수요는 일치하는가?",
+    page_title="노후준비교육은 실제 행동으로 이어질까?",
     page_icon="📊",
     layout="wide",
 )
@@ -268,13 +268,13 @@ avg_recipients = df["노령연금수급자수"].mean()
 
 def classify(row):
     if row["교육참여인원"] >= avg_participants and row["노령연금수급자수"] >= avg_recipients:
-        return "핵심관리형"
+        return "행동연계형"
     elif row["교육참여인원"] >= avg_participants and row["노령연금수급자수"] < avg_recipients:
-        return "교육집중형"
+        return "참여우수형"
     elif row["교육참여인원"] < avg_participants and row["노령연금수급자수"] >= avg_recipients:
-        return "확대필요형"
+        return "전환필요형"
     else:
-        return "저수요형"
+        return "기초관리형"
 
 df["지역유형"] = df.apply(classify, axis=1)
 
@@ -297,12 +297,12 @@ top_efficiency = df_interpret.sort_values("교육효율성", ascending=False).il
 # =========================================================
 st.markdown("""
 <div class="hero">
-    <h1>노후준비교육의 공급과 수요는 일치하는가?</h1>
+    <h1>노후준비교육은 실제 행동으로 이어질까?</h1>
     <p>
-        국민연금공단의 <b>지역본부별 노후준비교육 현황</b>과 <b>지역별 노령연금 수급 규모 현황</b>을 결합하여,
-        교육 공급량과 실제 노후준비 수요가 어떻게 대응되는지 분석했습니다.
-        본 대시보드는 단순 현황 파악을 넘어, 교육 횟수와 참여, 수급 규모 사이의 관계를 통해
-        노후준비교육 운영 전략과 개인 맞춤형 노후 재무 시뮬레이션 서비스의 필요성을 도출합니다.
+        <b>지역별 노후준비교육 현황과 연금 관련 지표를 활용한 탐색적 분석</b><br>
+        본 대시보드는 국민연금공단의 노후준비교육 데이터와 지역별 연금 관련 지표를 결합하여,
+        교육 공급이 실제 참여로 이어지는지, 그리고 교육 참여가 연금 관련 준비 수준과 어떤 관계를 보이는지 분석합니다.
+        단, 본 분석은 노후준비 행동 전체를 단정하는 것이 아니라, 연금 관련 지표를 노후준비 행동의 하나의 대리 지표로 활용한 탐색적 분석입니다.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -314,7 +314,7 @@ st.markdown("""
 k1, k2, k3, k4 = st.columns(4)
 k1.metric("총 교육횟수", f"{df['교육횟수'].sum():,.0f}회")
 k2.metric("총 교육참여인원", f"{df['교육참여인원'].sum():,.0f}명")
-k3.metric("노령연금 수급 규모 지표 합계", f"{df['노령연금수급자수'].sum():,.0f}")
+k3.metric("연금 관련 행동 지표 합계", f"{df['노령연금수급자수'].sum():,.0f}")
 k4.metric("교육 효율성 최상위", f"{top_efficiency['지역본부_표시']}")
 
 st.divider()
@@ -328,10 +328,12 @@ st.markdown('<div class="section-title">01. 문제제기와 데이터 설계</di
 
 st.markdown("""
 <div class="question-box">
-<b>노후준비교육은 정말 필요한 지역에 충분히 제공되고 있을까?</b><br>
-고령화가 가속화되면서 노후준비교육의 중요성은 커지고 있습니다.
-하지만 교육을 많이 운영하는 지역이 실제 노후준비 수요가 높은 지역인지,
-또 교육 공급량이 실제 참여로 이어지는지는 별도로 확인이 필요합니다.
+<b>노후준비교육은 실제 노후준비 행동과 연결되어 있을까?</b><br>
+고령화가 심화되면서 노후준비교육의 중요성은 커지고 있습니다.
+그러나 교육을 많이 제공한다고 해서 실제로 사람들이 노후준비 행동으로까지 나아가는지는 별도의 데이터 분석이 필요합니다.
+노후준비 행동은 저축, 투자, 보험, 부동산 등 다양한 요소를 포함하므로 하나의 지표로 완전히 설명하기 어렵습니다.
+따라서 본 분석에서는 <b>연금 관련 지표를 노후준비 행동의 하나의 대리 지표</b>로 활용하여,
+교육 공급·교육 참여·연금 관련 지표 사이의 관계를 탐색적으로 분석합니다.
 </div>
 """, unsafe_allow_html=True)
 
@@ -347,7 +349,7 @@ with c2:
     st.markdown("""
 <div class="type-card">
 <b>데이터 2: 노령연금 수급 규모 현황</b>
-<span>지역별 노령연금 수급 규모와 수급금액을 사용하여 노후준비 수요 규모를 파악했습니다.</span>
+<span>지역별 노령연금 수급 규모와 수급금액을 사용하여 연금 관련 지표 규모를 파악했습니다.</span>
 </div>
 """, unsafe_allow_html=True)
 with c3:
@@ -366,10 +368,10 @@ FROM education_pension;
 st.markdown("""
 <div class="insight">
 <b>분석 방향</b><br>
-본 분석은 교육 공급을 의미하는 <b>교육횟수·교육참여인원</b>과
-노후준비 수요를 의미하는 <b>노령연금 수급 규모</b>를 비교합니다. 단, 본 데이터의 수급 규모는 지역별 수요를 비교하기 위한 지표로 사용하며, 전체 합계를 단순 인구 수로 해석하지 않습니다.
-이를 통해 “교육을 많이 제공하면 참여도 높을까?”, “수요가 높은 지역은 교육 참여도 높을까?”라는 가정을 검증합니다.
-또한 특정 지역명을 단정적으로 해석하기보다, <b>교육 공급-참여-수요의 관계</b> 자체에 초점을 맞추었습니다.
+본 분석은 <b>교육 공급(교육횟수)</b>, <b>교육 참여(교육참여인원)</b>, <b>연금 관련 행동 지표(노령연금 수급 규모)</b>를 단계적으로 비교합니다.
+이를 통해 “교육을 많이 제공하면 참여도 높아질까?”, “교육 참여가 높은 지역은 연금 관련 지표도 높게 나타날까?”라는 질문을 검증합니다.
+다만 본 분석은 교육이 직접적으로 연금 관련 행동을 유발했다고 주장하는 것이 아니라,
+지역 단위 데이터에서 나타나는 <b>관계와 패턴을 탐색</b>하는 데 목적이 있습니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
@@ -379,10 +381,10 @@ st.markdown('</div>', unsafe_allow_html=True)
 # 02 교육 공급 현황
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">02. 교육 공급은 지역별로 균등하게 이루어지고 있을까?</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">02. 노후준비교육은 어디에서 활발하게 이루어지고 있을까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 지역본부별 노후준비교육 공급 규모에는 차이가 있을까?
+<b>질문</b> 노후준비교육은 지역별로 얼마나 다르게 제공되고 있을까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -529,13 +531,13 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================
-# 04 노후준비 수요 현황
+# 04 연금 관련 준비 지표 현황
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">04. 노후준비 수요가 높은 지역은 어디일까?</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">04. 연금 관련 준비 수준은 지역별로 차이가 있을까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 노령연금 수급 규모를 기준으로 볼 때, 어느 지역의 노후준비 수요가 가장 클까?
+<b>질문</b> 노령연금 수급 규모를 기준으로 볼 때, 어느 지역의 연금 관련 준비 지표가 가장 클까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -557,7 +559,7 @@ fig4 = px.bar(
     text="노령연금수급자수",
     color="노령연금수급자수",
     color_continuous_scale="YlOrBr",
-    title="지역본부별 노령연금 수급 규모",
+    title="지역본부별 연금 관련 지표",
     labels={"지역본부_표시": "지역본부", "노령연금수급자수": "노령연금수급자수"},
 )
 fig4.update_traces(texttemplate="%{text:,.0f}명", textposition="outside", cliponaxis=False)
@@ -571,14 +573,14 @@ st.markdown(f"""
 <b>결과</b><br>
 ※ 아래 결과 해석은 여러 지역이 묶인 ‘기타’를 제외한 주요 지역본부 기준입니다.<br>
 노령연금 수급 규모가 가장 큰 지역은 <b>{top_demand['지역본부_표시']}</b>입니다.
-이는 노후준비 수요가 전국에 균등하게 분포하지 않고 특정 지역에 집중되어 있음을 보여줍니다.
+이는 연금 관련 준비 지표가 전국에 균등하게 분포하지 않고 특정 지역에 집중되어 있음을 보여줍니다.
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-노령연금 수급 규모는 지역별로 큰 차이를 보였고, 이는 노후준비 수요가 특정 지역에 집중되어 있음을 의미합니다.
+노령연금 수급 규모는 지역별로 큰 차이를 보였고, 이는 연금 관련 준비 지표가 특정 지역에 집중되어 있음을 의미합니다.
 따라서 모든 지역에 동일한 규모의 교육을 제공하는 방식은 실제 수요를 충분히 반영하지 못할 가능성이 있습니다.
 노후준비교육은 전국 단일 기준으로 운영되기보다, 지역별 수급 규모와 잠재 수요를 함께 고려하여 교육 자원과 홍보 전략을 차등적으로 설계할 필요가 있습니다.
 즉, 교육 정책의 효율성을 높이기 위해서는 <b>공급량</b>뿐 아니라 <b>수요의 밀도와 규모</b>를 함께 반영해야 합니다.
@@ -591,7 +593,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 # 05 공급과 수요 관계
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">05. 노후준비 수요가 높은 지역은 교육 참여도 높을까?</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">05. 교육 참여는 연금 관련 행동 지표와 연결될까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
 <b>질문</b> 노령연금 수급 규모가 큰 지역일수록 노후준비교육 참여도 많을까?
@@ -614,7 +616,7 @@ fig5 = px.scatter(
     size="수급 규모1천명당교육참여",
     color="지역본부_표시",
     text="지역본부_표시",
-    title="노령연금 수급 규모와 교육 참여 수준의 관계",
+    title="교육 참여 수준과 연금 관련 지표의 관계",
     labels={
         "노령연금수급자수": "노령연금수급자수",
         "교육참여인원": "교육참여인원",
@@ -642,7 +644,7 @@ st.markdown("""
 <b>인사이트</b><br>
 일반적으로 노후준비가 필요한 사람이 많은 지역일수록 교육 참여도 높을 것이라고 예상할 수 있습니다.
 그러나 실제 데이터에서는 수급 규모와 교육 참여 수준 사이에 뚜렷한 비례 관계가 나타나지 않았습니다.
-이는 노후준비 수요가 존재하더라도 그 수요가 자동으로 교육 참여 행동으로 전환되지는 않는다는 점을 보여줍니다.
+이는 연금 관련 준비 지표가 존재하더라도 그 수요가 자동으로 교육 참여 행동으로 전환되지는 않는다는 점을 보여줍니다.
 따라서 노후준비교육의 문제는 단순한 <b>수요 부족</b>이 아니라, 잠재적 수요를 실제 참여로 연결하는 <b>참여 전환 과정</b>에 있을 수 있습니다.
 교육 대상자가 많은 지역일수록 교육 접근성, 정보 전달 방식, 참여 유인 설계가 더욱 중요합니다.
 </div>
@@ -654,10 +656,10 @@ st.markdown('</div>', unsafe_allow_html=True)
 # 06 지역 유형화
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">06. 데이터 기반 지역 유형화</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">06. 교육 참여와 연금 관련 지표로 지역을 유형화할 수 있을까?</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="question-box">
-<b>질문</b> 교육 참여 수준과 노후준비 수요를 함께 고려하면 지역을 어떻게 구분할 수 있을까?
+<b>질문</b> 교육 참여 수준과 연금 관련 지표를 함께 고려하면 지역을 어떻게 구분할 수 있을까?
 </div>
 """, unsafe_allow_html=True)
 
@@ -669,17 +671,17 @@ SELECT
     CASE
         WHEN 교육참여인원 >= (SELECT AVG(교육참여인원) FROM education_pension)
          AND 노령연금수급자수 >= (SELECT AVG(노령연금수급자수) FROM education_pension)
-        THEN '핵심관리형'
+        THEN '행동연계형'
 
         WHEN 교육참여인원 >= (SELECT AVG(교육참여인원) FROM education_pension)
          AND 노령연금수급자수 < (SELECT AVG(노령연금수급자수) FROM education_pension)
-        THEN '교육집중형'
+        THEN '참여우수형'
 
         WHEN 교육참여인원 < (SELECT AVG(교육참여인원) FROM education_pension)
          AND 노령연금수급자수 >= (SELECT AVG(노령연금수급자수) FROM education_pension)
-        THEN '확대필요형'
+        THEN '전환필요형'
 
-        ELSE '저수요형'
+        ELSE '기초관리형'
     END AS 지역유형
 FROM education_pension;
 """
@@ -691,7 +693,7 @@ fig6 = px.scatter(
     color="지역유형",
     size="수급 규모1천명당교육참여",
     text="지역본부_표시",
-    title="교육 참여 수준과 노후준비 수요에 따른 지역 유형화",
+    title="교육 참여 수준과 연금 관련 준비 지표에 따른 지역 유형화",
     labels={
         "노령연금수급자수": "노령연금수급자수",
         "교육참여인원": "교육참여인원",
@@ -708,19 +710,20 @@ st.plotly_chart(fig6, use_container_width=True)
 show_sql(sql_type, "지역 유형화 SQL 보기")
 
 tc1, tc2, tc3, tc4 = st.columns(4)
-tc1.markdown('<div class="type-card"><b>핵심관리형</b><span>수요와 참여가 모두 높은 지역입니다. 현재 운영을 유지하며 우수사례로 활용할 수 있습니다.</span></div>', unsafe_allow_html=True)
-tc2.markdown('<div class="type-card"><b>교육집중형</b><span>수요 규모에 비해 참여가 높은 지역입니다. 효과적인 운영 방식의 단서를 찾을 수 있습니다.</span></div>', unsafe_allow_html=True)
-tc3.markdown('<div class="type-card"><b>확대필요형</b><span>수요는 크지만 참여가 낮은 지역입니다. 향후 교육 확대와 참여 유도 전략이 필요한 후보입니다.</span></div>', unsafe_allow_html=True)
-tc4.markdown('<div class="type-card"><b>저수요형</b><span>수요와 참여가 모두 낮은 지역입니다. 잠재 수요와 지역 특성에 대한 추가 확인이 필요합니다.</span></div>', unsafe_allow_html=True)
+tc1.markdown('<div class="type-card"><b>행동연계형</b><span>교육 참여와 연금 관련 지표가 모두 높은 지역입니다. 교육과 행동 지표가 함께 나타나는 우수 사례로 볼 수 있습니다.</span></div>', unsafe_allow_html=True)
+tc2.markdown('<div class="type-card"><b>참여우수형</b><span>교육 참여는 높지만 연금 관련 지표는 상대적으로 낮은 지역입니다. 교육 이후 행동 전환을 높이는 후속 지원이 필요합니다.</span></div>', unsafe_allow_html=True)
+tc3.markdown('<div class="type-card"><b>전환필요형</b><span>연금 관련 지표는 높지만 교육 참여가 낮은 지역입니다. 기존 준비 행동은 존재하나 교육 참여로 연결되지 않은 집단일 수 있습니다.</span></div>', unsafe_allow_html=True)
+tc4.markdown('<div class="type-card"><b>기초관리형</b><span>교육 참여와 연금 관련 지표가 모두 낮은 지역입니다. 기초 홍보와 접근성 개선이 우선 필요한 지역입니다.</span></div>', unsafe_allow_html=True)
 
 st.markdown("""
 <div class="insight">
 <b>인사이트</b><br>
-지역을 단순히 교육횟수나 참여인원 순위로 비교하면 정책적 우선순위를 파악하기 어렵습니다.
-반면 노후준비 수요와 교육 참여 수준을 함께 고려하면 지역별 전략 방향이 더 명확해집니다.
-<b>확대필요형</b>은 수요는 크지만 참여가 낮은 지역이므로 교육 홍보, 접근성 개선, 참여 유도 전략이 우선적으로 필요합니다.
-<b>교육집중형</b>은 수요 규모에 비해 참여가 높은 지역으로, 효과적인 운영 방식이나 홍보 전략을 다른 지역에 적용할 수 있는 벤치마킹 사례가 될 수 있습니다.
-즉, 지역 유형화는 단순 현황 비교를 넘어 <b>어디에 어떤 방식으로 교육 자원을 투입해야 하는지</b>를 판단하는 의사결정 도구로 활용될 수 있습니다.
+지역을 단순히 교육횟수나 참여인원 순위로만 비교하면 정책적 의미를 찾기 어렵습니다.
+교육 참여와 연금 관련 지표를 함께 고려하면, 지역별로 다른 개입 전략을 설계할 수 있습니다.
+<b>행동연계형</b>은 교육 참여와 연금 관련 지표가 함께 높은 지역으로, 교육과 준비 지표가 함께 나타나는 사례입니다.
+<b>참여우수형</b>은 교육 참여는 높지만 연금 관련 지표가 상대적으로 낮은 지역으로, 교육 이후 실제 행동 전환을 지원하는 후속 서비스가 필요합니다.
+<b>전환필요형</b>은 연금 관련 지표는 높지만 교육 참여가 낮은 지역으로, 이미 준비 행동은 존재하지만 교육 서비스와 연결되지 않은 집단일 가능성이 있습니다.
+이처럼 유형화는 단순 현황 비교를 넘어, 지역별로 어떤 교육 전략과 후속 서비스를 설계해야 하는지 판단하는 의사결정 도구로 활용될 수 있습니다.
 </div>
 """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
@@ -730,31 +733,26 @@ st.markdown('</div>', unsafe_allow_html=True)
 # 07 결론과 서비스 제안
 # =========================================================
 st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">07. 결론 및 서비스 제안</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">07. 결론 및 개인 맞춤형 서비스 제안</div>', unsafe_allow_html=True)
 
 st.markdown("""
 <div class="result">
 <b>최종 결론</b><br>
-이번 분석은 노후준비교육의 공급 규모와 노후준비 수요 규모가 반드시 일치하지 않음을 보여주었습니다.
-특히 교육 횟수를 늘리는 것만으로는 참여 확대가 보장되지 않았으며,
-수요가 높은 지역에서도 교육 참여가 기대만큼 높지 않은 사례가 확인되었습니다.
-반대로 일부 지역은 상대적으로 적은 교육 공급에도 높은 참여 성과를 보였습니다.
-이는 노후준비교육 정책이 단순 공급 확대 중심에서 벗어나,
-지역별 수요 특성과 참여 패턴을 고려한 맞춤형 전략으로 전환될 필요가 있음을 시사합니다.
-또한 교육 성과를 평가할 때 교육횟수뿐 아니라 <b>교육 1회당 참여 효율성</b>과 <b>수요 대비 참여 수준</b>을 함께 고려해야 합니다.
+이번 분석은 노후준비교육이 활발하게 이루어진 지역이 반드시 더 높은 연금 관련 준비 지표를 보이는 것은 아니라는 점을 보여주었습니다.
+교육횟수를 늘리는 것만으로는 참여 확대가 보장되지 않았고, 교육 참여가 높다고 해서 연금 관련 지표가 단순히 함께 높아지는 구조도 뚜렷하게 확인되지 않았습니다.
+이는 노후준비교육이 중요한 출발점이 될 수는 있지만, 교육만으로 개인의 노후준비 행동을 충분히 설명하기 어렵다는 것을 의미합니다.
+따라서 노후준비교육의 성과를 높이기 위해서는 교육 공급, 교육 참여, 교육 이후 행동 전환을 구분하여 관리할 필요가 있습니다.
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="insight">
 <b>서비스 제안</b><br>
-본 분석은 지역 단위에서 노후준비교육의 공급과 수요를 비교했습니다.
-그러나 같은 지역 안에서도 개인의 소득, 자산, 연금 수준은 크게 다를 수 있기 때문에,
-지역 단위 교육만으로는 개인별 노후준비 상태를 충분히 설명하기 어렵습니다.
-따라서 향후에는 지역별 교육 전략과 함께 <b>개인 맞춤형 노후 재무 시뮬레이션 서비스</b>를 제공할 필요가 있습니다.
-이 서비스는 개인이 자신의 예상 연금, 현재 자산, 저축액, 미래 생활비를 직접 확인하고,
-교육 이후 구체적인 노후준비 행동으로 이어질 수 있도록 돕는 의사결정 지원 도구가 될 수 있습니다.
-즉, 지역 단위 분석은 교육 자원 배분의 방향을 제시하고, 개인 맞춤형 서비스는 실제 행동 변화를 유도하는 보완적 역할을 수행합니다.
+본 분석은 지역 단위에서 노후준비교육과 연금 관련 지표의 관계를 탐색했습니다.
+그러나 같은 지역 안에서도 개인의 소득, 자산, 저축액, 예상 연금 수준은 크게 다를 수 있습니다.
+따라서 향후에는 집단 교육과 함께 <b>개인 맞춤형 노후 재무 시뮬레이션 서비스</b>를 제공할 필요가 있습니다.
+이 서비스는 사용자가 자신의 현재 소득, 자산, 월 저축액, 예상 연금을 입력하면 미래 자산 변화와 노후 준비 부족 구간을 확인할 수 있도록 돕습니다.
+즉, 지역 단위 분석은 교육 자원 배분의 방향을 제시하고, 개인 맞춤형 서비스는 교육 이후 실제 노후준비 행동으로 이어지도록 돕는 보완적 의사결정 지원 도구가 될 수 있습니다.
 </div>
 """, unsafe_allow_html=True)
 
